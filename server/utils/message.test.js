@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 var expect = require('expect'); // npm install expect --save-dev
 
 var {generateMessage} = require('./message');

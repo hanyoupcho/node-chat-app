@@ -1,7 +1,8 @@
+/*jshint esversion: 6 */
 const path = require('path');
 const http = require('http');
-const express = require('express'); // npm i express --save
-const socketIO = require('socket.io'); // npm i socket.io --save
+const express = require('express');
+const socketIO = require('socket.io');
 
 const {generateMessage} = require('./utils/message');
 const publicPath = path.join(__dirname, '../public');
@@ -10,22 +11,24 @@ var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
 
-// show public html
 app.use(express.static(publicPath));
 
-// Event Listner
 io.on('connection', (socket) => {
   console.log('New user connected');
 
+
+  // to single person
   socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
 
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
   // Socket Listner
-  socket.on('createMessage', (message) => {
+  socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
 
+    // to everyone
     io.emit('newMessage', generateMessage(message.from, message.text));
+    //callback('This is from server');
 
     // socket.broadcast.emit('newMessage', {
     //   from: message.from,
